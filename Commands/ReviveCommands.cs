@@ -21,7 +21,7 @@ internal class ReviveCommands
 
 		Nullable_Unboxed<float3> spawnLoc = new();
 		spawnLoc.value = pos;
-		spawnLoc.has_value = true;
+		// spawnLoc.has_value = true;
 
 		sbs.RespawnCharacter(buffer, ctx.Event.SenderUserEntity,
 			customSpawnLocation: spawnLoc,

@@ -1,8 +1,9 @@
-using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
-using Bloodstone;
 using Bloodstone.API;
 using HarmonyLib;
 using ProjectM;
@@ -18,11 +19,14 @@ public class Plugin : BasePlugin, IRunOnInitialized
 {
 	internal static Harmony Harmony;
 	internal static ManualLogSource PluginLog;
+	public static Dictionary<string, List<int>> availableKits = new Dictionary<string, List<int>>();
+
 	public override void Load()
 	{
 		PluginLog = Log;
 		// Plugin startup logic
 		Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
+		LoadKits();
 
 		// Harmony patching
 		Harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
@@ -39,7 +43,18 @@ public class Plugin : BasePlugin, IRunOnInitialized
 		Harmony?.UnpatchSelf();
 		return true;
 	}
+	private void LoadKits()
+	{
+		Log.LogInfo("Loading kits");
+		string text = File.ReadAllText(@"./kits.json");
+		var kitsCollection = JsonSerializer.Deserialize<KitsCollection>(text);
 
+		foreach (var kit in kitsCollection.kits)
+		{
+			Log.LogInfo($"Kit is being added: {kit.name}");
+			availableKits.Add(kit.name, kit.items);
+		}
+	}
 
 	public void OnGameInitialized()
 	{
