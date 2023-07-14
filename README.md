@@ -19,6 +19,6 @@ CommunityCommands is a server modification for V Rising that adds chat commands 
 ## kits
 
 To use kits place a kits.json at the root of your server next to the vrisingserver.exe
-An example kits.json is available see [a relative link](kits.json) which has one kit to spawn 3 bone rings.
+An example kits.json is available see [kits.json](kits.json) which has one kit to spawn 3 bone rings.
 
 `.kit [kit name]`
