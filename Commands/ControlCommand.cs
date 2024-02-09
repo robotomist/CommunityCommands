@@ -53,14 +53,14 @@ internal class ControlCommands
 
 		// controlDebugEvent.EntityTarget = ctx.Event.SenderUserEntity;
 		controlDebugEvent.EntityTarget = savedPlayer.UserEntity;
-		Core.Server.GetExistingSystem<DebugEventsSystem>().JumpToNextBloodMoon();
-			Core.Server.GetExistingSystem<DebugEventsSystem>().ControlUnit(fromCharacter, clientEvent);
-		ctx.Reply("reset");
+		var des = Core.Server.GetExistingSystem<DebugEventsSystem>();
+		des.JumpToNextBloodMoon();
+		des.ControlUnit(fromCharacter, clientEvent);
 	}
 	
 	// 
-	[Command("t", "control", adminOnly: true)]
-	public void ControlCommand(ChatCommandContext ctx, string name, bool controlPlayer = false)
+	[Command("t", adminOnly: true)]
+	public void ControlUnitCommand(ChatCommandContext ctx, string name = "Char_Cultist_Slicer", bool controlPlayer = false)
 	{
 		// make sure the user is an admin:
 		if (!ctx.IsAdmin)
@@ -145,7 +145,23 @@ internal class ControlCommands
 			ControlDebugEvent controlDebugEvent = default(ControlDebugEvent);
 			controlDebugEvent.EntityTarget = firstMob;
 			ControlDebugEvent clientEvent = controlDebugEvent;
-			Core.Server.GetExistingSystem<DebugEventsSystem>().ControlUnit(fromCharacter2, clientEvent);
+			
+			var des = Core.Server.GetExistingSystem<DebugEventsSystem>();
+			des.ControlUnit(fromCharacter2, clientEvent);
+
+			// SetMovementSpeedDebugEvent setMovementSpeedDebugEvent = new SetMovementSpeedDebugEvent(){
+			// 	Value = 10,
+			// 	Force = true
+			// };
+
+			SetControlMoveSpeedDebugEvent setMovementSpeedDebugEvent = new SetControlMoveSpeedDebugEvent(){
+				Value = AiMoveSpeed.Run 
+			};
+
+			des.SetControlMoveSpeed(fromCharacter2, setMovementSpeedDebugEvent);
+			// Core.Server.GetExistingSystem<DebugEventsSystem>().SetMovementSpeed(setMovementSpeedDebugEvent, fromCharacter2);
+			
+			// Core.Server.GetExistingSystem<DebugEventsSystem>().SetMovementSpeed(playerCharacter, fromCharacter2);
 		}
 
 
@@ -155,7 +171,7 @@ internal class ControlCommands
 	[Command("cp", adminOnly: true)]
 	public void ControlPlayer(ChatCommandContext ctx)
 	{
-		ControlCommand(ctx, "CHAR_VampireMale", true);
+		ControlUnitCommand(ctx, "CHAR_VampireMale", true);
 	}
 }
 
